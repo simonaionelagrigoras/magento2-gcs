@@ -63,4 +63,18 @@ class Plugin
         }
         return $proceed($filename);
     }
+
+    /**
+     * Removes any forward slashes from the start of the uploaded file name.
+     * This addresses a bug where category pages were being saved with duplicate
+     * slashes, e.g. catalog/category//tswifty_4.jpg.
+     *
+     * @param Database $subject
+     * @param string $result
+     * @return string
+     */
+    public function afterSaveUploadedFile(Database $subject, $result)
+    {
+        return ltrim($result, '/');
+    }
 }
