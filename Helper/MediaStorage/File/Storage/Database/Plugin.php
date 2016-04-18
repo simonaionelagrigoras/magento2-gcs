@@ -87,6 +87,17 @@ class Plugin
         return $newMediaRelativePath;
     }
 
+    public function aroundDeleteFolder(Database $subject, $proceed, $folderName)
+    {
+        if ($this->helper->checkS3Usage()) {
+            /** @var \Arkade\S3\Model\MediaStorage\File\Storage\S3 $storageModel */
+            $storageModel = $subject->getStorageDatabaseModel();
+            $storageModel->deleteDirectory($folderName);
+        } else {
+            $proceed($folderName);
+        }
+    }
+
     /**
      * Removes any forward slashes from the start of the uploaded file name.
      * This addresses a bug where category pages were being saved with duplicate
