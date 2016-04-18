@@ -65,6 +65,29 @@ class Plugin
     }
 
     /**
+     * The Magento_ImportExport module will try to run erroneous file paths,
+     * e.g. pub/media/catalog/category/twswifty.jpg, through the parent function
+     * of this plugin. The parent function can't handle this so it just returns
+     * the original file path (when we really don't want the pub/media prefix at
+     * all). This plugin will remove the pub/media prefix.
+     *
+     * @param Database $subject
+     * @param string $result
+     * @return string
+     */
+    public function afterGetMediaRelativePath(Database $subject, $result)
+    {
+        $newMediaRelativePath = $result;
+        if ($this->helper->checkS3Usage()) {
+            $prefixToRemove = 'pub/media/';
+            if (substr($result, 0, strlen($prefixToRemove)) == $prefixToRemove) {
+                $newMediaRelativePath = substr($result, strlen($prefixToRemove));
+            }
+        }
+        return $newMediaRelativePath;
+    }
+
+    /**
      * Removes any forward slashes from the start of the uploaded file name.
      * This addresses a bug where category pages were being saved with duplicate
      * slashes, e.g. catalog/category//tswifty_4.jpg.
