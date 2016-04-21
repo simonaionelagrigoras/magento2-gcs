@@ -33,6 +33,12 @@
     <type name="Magento\MediaStorage\Model\File\Storage\Synchronization">
         <plugin name="arkade_s3_model_mediastorage_file_storage_synchronisation_plugin" type="Arkade\S3\Model\MediaStorage\File\Storage\Synchronisation\Plugin" />
     </type>
+    <type name="Magento\ProductVideo\Controller\Adminhtml\Product\Gallery\RetrieveImage">
+        <arguments>
+            <!-- We need to upload the temporary product video thumbnails to S3 -->
+            <argument name="fileUtility" xsi:type="object">Arkade\S3\Model\ResourceModel\MediaStorage\File\Storage\File</argument>
+        </arguments>
+    </type>
     <type name="Magento\Store\Model\Store">
         <plugin name="arkade_s3_model_store_store_plugin" type="Arkade\S3\Model\Store\Store\Plugin" />
     </type>
