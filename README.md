@@ -39,6 +39,9 @@ We have a [Troubleshooting](https://github.com/arkadedigital/magento2-s3/wiki/Tr
 
 If you can't find the answer you're looking for, however, feel free to [create a GitHub issue](https://github.com/arkadedigital/magento2-s3/issues/new) or [send us an email](mailto:support@arkade.com.au) for support regarding this extension.
 
+FAQs
+----
+
 ### Does this extension upload my log files?
 
 No, the S3 extension only syncs across the media folder. You will need to find an alternative solution to store your log files.
