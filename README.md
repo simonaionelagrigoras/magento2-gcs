@@ -1,5 +1,5 @@
-Arkade S3 Extension
-===================
+Arkade S3 Extension for Magento 2
+=================================
 
 Arkade's S3 extension for Magento 2 allows retailers to upload their catalogue and WYSIWYG images straight to Amazon S3.
 
