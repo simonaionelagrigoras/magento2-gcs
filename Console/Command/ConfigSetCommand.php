@@ -1,5 +1,5 @@
 <?php
-namespace Arkade\S3\Console\Command;
+namespace cAc\Gcs\Console\Command;
 
 use Magento\Config\Model\Config\Factory;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +17,7 @@ class ConfigSetCommand extends \Symfony\Component\Console\Command\Command
     public function __construct(
         \Magento\Framework\App\State $state,
         Factory $configFactory,
-        \Arkade\S3\Helper\S3 $helper
+        \cAc\Gcs\Helper\Gcs $helper
     ) {
         $this->state = $state;
         $this->helper = $helper;
@@ -27,15 +27,15 @@ class ConfigSetCommand extends \Symfony\Component\Console\Command\Command
 
     protected function configure()
     {
-        $this->setName('s3:config:set')
-            ->setDescription('Allows you to set your S3 configuration via the CLI.')
+        $this->setName('gcs:config:set')
+            ->setDescription('Allows you to set your GCS configuration via the CLI.')
             ->setDefinition($this->getOptionsList());
         parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$input->getOption('region') && !$input->getOption('bucket') && !$input->getOption('secret-key') && !$input->getOption('access-key-id')) {
+        if (!$input->getOption('region') && !$input->getOption('bucket') && !$input->getOption('project') && !$input->getOption('access-key')) {
             $output->writeln($this->getSynopsis());
             return;
         }
@@ -49,36 +49,36 @@ class ConfigSetCommand extends \Symfony\Component\Console\Command\Command
         $this->state->setAreaCode('adminhtml');
         $config = $this->configFactory->create();
 
-        if (!empty($input->getOption('access-key-id'))) {
-            $config->setDataByPath('arkade_s3/general/access_key', $input->getOption('access-key-id'));
+        if (!empty($input->getOption('access-key'))) {
+            $config->setDataByPath('cac_gcs/general/access_key', $input->getOption('access-key'));
             $config->save();
         }
 
-        if (!empty($input->getOption('secret-key'))) {
-            $config->setDataByPath('arkade_s3/general/secret_key', $input->getOption('secret-key'));
+        if (!empty($input->getOption('project'))) {
+            $config->setDataByPath('cac_gcs/general/project', $input->getOption('project'));
             $config->save();
         }
 
         if (!empty($input->getOption('bucket'))) {
-            $config->setDataByPath('arkade_s3/general/bucket', $input->getOption('bucket'));
+            $config->setDataByPath('cac_gcs/general/bucket', $input->getOption('bucket'));
             $config->save();
         }
 
         if (!empty($input->getOption('region'))) {
-            $config->setDataByPath('arkade_s3/general/region', $input->getOption('region'));
+            $config->setDataByPath('cac_gcs/general/region', $input->getOption('region'));
             $config->save();
         }
 
-        $output->writeln('<info>You have successfully updated your S3 credentials.</info>');
+        $output->writeln('<info>You have successfully updated your GCS credentials.</info>');
     }
 
     public function getOptionsList()
     {
         return [
-            new InputOption('access-key-id', null, InputOption::VALUE_OPTIONAL, 'a valid AWS access key ID'),
-            new InputOption('secret-key', null, InputOption::VALUE_OPTIONAL, 'a valid AWS secret access key'),
-            new InputOption('bucket', null, InputOption::VALUE_OPTIONAL, 'an S3 bucket name'),
-            new InputOption('region', null, InputOption::VALUE_OPTIONAL, 'an S3 region, e.g. us-east-1')
+            new InputOption('access-key', null, InputOption::VALUE_OPTIONAL, 'a valid GCS access JSON object'),
+            new InputOption('project', null, InputOption::VALUE_OPTIONAL, 'a valid GCS project ID'),
+            new InputOption('bucket', null, InputOption::VALUE_OPTIONAL, 'an GCS bucket name'),
+            new InputOption('region', null, InputOption::VALUE_OPTIONAL, 'an GCD region, e.g. us-east-b')
         ];
     }
 

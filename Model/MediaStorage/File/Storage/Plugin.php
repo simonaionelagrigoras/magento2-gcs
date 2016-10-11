@@ -1,17 +1,17 @@
 <?php
-namespace Arkade\S3\Model\MediaStorage\File\Storage;
+namespace cAc\Gcs\Model\MediaStorage\File\Storage;
 
 class Plugin
 {
     private $coreFileStorage;
-    private $s3Factory;
+    private $gcsFactory;
 
     public function __construct(
         \Magento\MediaStorage\Helper\File\Storage $coreFileStorage,
-        S3Factory $s3Factory
+        GcsFactory $gcsFactory
     ) {
         $this->coreFileStorage = $coreFileStorage;
-        $this->s3Factory = $s3Factory;
+        $this->gcsFactory = $gcsFactory;
     }
 
     public function aroundGetStorageModel($subject, $proceed, $storage = null, array $params = [])
@@ -22,8 +22,8 @@ class Plugin
                 $storage = $this->coreFileStorage->getCurrentStorageCode();
             }
             switch ($storage) {
-                case \Arkade\S3\Model\MediaStorage\File\Storage::STORAGE_MEDIA_S3:
-                    $storageModel = $this->s3Factory->create();
+                case \cAc\Gcs\Model\MediaStorage\File\Storage::STORAGE_MEDIA_GCS:
+                    $storageModel = $this->gcsFactory->create();
                     break;
                 default:
                     return false;

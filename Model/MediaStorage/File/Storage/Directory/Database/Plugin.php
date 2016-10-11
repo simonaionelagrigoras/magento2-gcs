@@ -1,5 +1,5 @@
 <?php
-namespace Arkade\S3\Model\MediaStorage\File\Storage\Directory\Database;
+namespace cAc\Gcs\Model\MediaStorage\File\Storage\Directory\Database;
 
 class Plugin
 {
@@ -8,8 +8,8 @@ class Plugin
     private $storageModel;
 
     public function __construct(
-        \Arkade\S3\Helper\Data $helper,
-        \Arkade\S3\Model\MediaStorage\File\Storage\S3 $storageModel
+        \cAc\Gcs\Helper\Data $helper,
+        \cAc\Gcs\Model\MediaStorage\File\Storage\Gcs $storageModel
     ) {
         $this->helper = $helper;
         $this->storageModel = $storageModel;
@@ -17,7 +17,7 @@ class Plugin
 
     public function aroundCreateRecursive($subject, $proceed, $path)
     {
-        if ($this->helper->checkS3Usage()) {
+        if ($this->helper->checkGCSUsage()) {
             return $this;
         }
         return $proceed($path);
@@ -25,7 +25,7 @@ class Plugin
 
     public function aroundGetSubdirectories($subject, $proceed, $directory)
     {
-        if ($this->helper->checkS3Usage()) {
+        if ($this->helper->checkGCSUsage()) {
             return $this->storageModel->getSubdirectories($directory);
         } else {
             return $proceed($directory);
@@ -34,7 +34,7 @@ class Plugin
 
     public function aroundDeleteDirectory($subject, $proceed, $path)
     {
-        if ($this->helper->checkS3Usage()) {
+        if ($this->helper->checkGCSUsage()) {
             return $this->storageModel->deleteDirectory($path);
         } else {
             return $proceed($path);

@@ -1,5 +1,5 @@
 <?php
-namespace Arkade\S3\Console\Command;
+namespace cAc\Gcs\Console\Command;
 
 use Magento\Config\Model\Config\Factory;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,8 +22,8 @@ class ConfigListCommand extends \Symfony\Component\Console\Command\Command
 
     protected function configure()
     {
-        $this->setName('s3:config:list')
-            ->setDescription('Lists whatever credentials for S3 you have provided for Magento.');
+        $this->setName('gcs:config:list')
+            ->setDescription('Lists whatever credentials for GCS you have provided for Magento.');
         parent::configure();
     }
 
@@ -31,11 +31,11 @@ class ConfigListCommand extends \Symfony\Component\Console\Command\Command
     {
         $this->state->setAreaCode('adminhtml');
         $config = $this->configFactory->create();
-        $output->writeln('Here are your AWS credentials.');
+        $output->writeln('Here are your Google Cloud credentials:');
         $output->writeln('');
-        $output->writeln(sprintf('Access Key ID:     %s', $config->getConfigDataValue('arkade_s3/general/access_key')));
-        $output->writeln(sprintf('Secret Access Key: %s', $config->getConfigDataValue('arkade_s3/general/secret_key')));
-        $output->writeln(sprintf('Bucket:            %s', $config->getConfigDataValue('arkade_s3/general/bucket')));
-        $output->writeln(sprintf('Region:            %s', $config->getConfigDataValue('arkade_s3/general/region')));
+        $output->writeln(sprintf('Access Key ID:     %s', $config->getConfigDataValue('cac_gcs/general/access_key')));
+        $output->writeln(sprintf('Secret Access Key: %s', $config->getConfigDataValue('cac_gcs/general/secret_key')));
+        $output->writeln(sprintf('Bucket:            %s', $config->getConfigDataValue('cac_gcs/general/bucket')));
+        $output->writeln(sprintf('Region:            %s', $config->getConfigDataValue('cac_gcs/general/region')));
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Arkade\S3\Model\MediaStorage\File\Storage\Synchronisation;
+namespace cAc\Gcs\Model\MediaStorage\File\Storage\Synchronisation;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
@@ -12,7 +12,7 @@ class Plugin
     private $mediaDirectory;
 
     public function __construct(
-        \Arkade\S3\Model\MediaStorage\File\Storage\S3Factory $storageFactory,
+        \cAc\Gcs\Model\MediaStorage\File\Storage\GcsFactory $storageFactory,
         Filesystem $filesystem
     ) {
         $this->storageFactory = $storageFactory;

@@ -1,5 +1,5 @@
 <?php
-namespace Arkade\S3\Helper\MediaStorage\File\Storage\Database;
+namespace cAc\Gcs\Helper\MediaStorage\File\Storage\Database;
 
 use Magento\MediaStorage\Helper\File\Storage\Database;
 
@@ -7,24 +7,24 @@ class Plugin
 {
     private $helper;
 
-    private $s3StorageFactory;
+    private $gcsStorageFactory;
 
     private $dbStorageFactory;
 
     private $storageModel = null;
 
     public function __construct(
-        \Arkade\S3\Helper\Data $helper,
-        \Arkade\S3\Model\MediaStorage\File\Storage\S3Factory $s3StorageFactory,
+        \cAc\Gcs\Helper\Data $helper,
+        \cAc\Gcs\Model\MediaStorage\File\Storage\GcsFactory $gcsStorageFactory,
         \Magento\MediaStorage\Model\File\Storage\DatabaseFactory $dbStorageFactory
     ) {
         $this->helper = $helper;
-        $this->s3StorageFactory = $s3StorageFactory;
+        $this->gcsStorageFactory = $gcsStorageFactory;
         $this->dbStorageFactory = $dbStorageFactory;
     }
 
     /**
-     * Check whether we are using either the database or S3 as our file storage
+     * Check whether we are using either the database or GCS as our file storage
      * backend.
      *
      * @param Database $subject
@@ -34,7 +34,7 @@ class Plugin
     public function afterCheckDbUsage(Database $subject, $result)
     {
         if (!$result) {
-            $result = $this->helper->checkS3Usage();
+            $result = $this->helper->checkGCSUsage();
         }
         return $result;
     }
@@ -42,8 +42,8 @@ class Plugin
     public function aroundGetStorageDatabaseModel(Database $subject, $proceed)
     {
         if (is_null($this->storageModel)) {
-            if ($subject->checkDbUsage() && $this->helper->checkS3Usage()) {
-                $this->storageModel = $this->s3StorageFactory->create();
+            if ($subject->checkDbUsage() && $this->helper->checkGCSUsage()) {
+                $this->storageModel = $this->gcsStorageFactory->create();
             } else {
                 $this->storageModel = $this->dbStorageFactory->create();
             }
@@ -53,7 +53,7 @@ class Plugin
 
     public function aroundSaveFileToFilesystem(Database $subject, $proceed, $filename)
     {
-        if ($subject->checkDbUsage() && $this->helper->checkS3Usage()) {
+        if ($subject->checkDbUsage() && $this->helper->checkGCSUsage()) {
             $file = $subject->getStorageDatabaseModel()->loadByFilename($subject->getMediaRelativePath($filename));
             if (!$file->getId()) {
                 return false;
@@ -78,7 +78,7 @@ class Plugin
     public function afterGetMediaRelativePath(Database $subject, $result)
     {
         $newMediaRelativePath = $result;
-        if ($this->helper->checkS3Usage()) {
+        if ($this->helper->checkGCSUsage()) {
             $prefixToRemove = 'pub/media/';
             if (substr($result, 0, strlen($prefixToRemove)) == $prefixToRemove) {
                 $newMediaRelativePath = substr($result, strlen($prefixToRemove));
@@ -89,8 +89,8 @@ class Plugin
 
     public function aroundDeleteFolder(Database $subject, $proceed, $folderName)
     {
-        if ($this->helper->checkS3Usage()) {
-            /** @var \Arkade\S3\Model\MediaStorage\File\Storage\S3 $storageModel */
+        if ($this->helper->checkGCSUsage()) {
+            /** @var \cAc\Gcs\Model\MediaStorage\File\Storage\Gcs $storageModel */
             $storageModel = $subject->getStorageDatabaseModel();
             $storageModel->deleteDirectory($folderName);
         } else {

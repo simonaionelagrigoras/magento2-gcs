@@ -1,7 +1,7 @@
 <?php
-namespace Arkade\S3\Helper;
+namespace cAc\Gcs\Helper;
 
-use Arkade\S3\Model\MediaStorage\File\Storage;
+use cAc\Gcs\Model\MediaStorage\File\Storage;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -12,32 +12,32 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      *
      * @return bool
      */
-    public function checkS3Usage()
+    public function checkGCSUsage()
     {
-        if (is_null($this->useS3)) {
+        if (is_null($this->useGCS)) {
             $currentStorage = (int)$this->scopeConfig->getValue(Storage::XML_PATH_STORAGE_MEDIA);
-            $this->useS3 = $currentStorage == Storage::STORAGE_MEDIA_S3;
+            $this->useGCS = $currentStorage == Storage::STORAGE_MEDIA_GCS;
         }
-        return $this->useS3;
+        return $this->useGCS;
     }
 
     public function getAccessKey()
     {
-        return $this->scopeConfig->getValue('arkade_s3/general/access_key');
+        return $this->scopeConfig->getValue('cac_gcs/general/access_key');
     }
 
-    public function getSecretKey()
+    public function getProject()
     {
-        return $this->scopeConfig->getValue('arkade_s3/general/secret_key');
+        return $this->scopeConfig->getValue('cac_gcs/general/project');
     }
 
     public function getRegion()
     {
-        return $this->scopeConfig->getValue('arkade_s3/general/region');
+        return $this->scopeConfig->getValue('cac_gcs/general/region');
     }
 
     public function getBucket()
     {
-        return $this->scopeConfig->getValue('arkade_s3/general/bucket');
+        return $this->scopeConfig->getValue('cac_gcs/general/bucket');
     }
 }

@@ -1,11 +1,11 @@
 <?php
-namespace Arkade\S3\Model\Config\Source;
+namespace cAc\Gcs\Model\Config\Source;
 
 class Region implements \Magento\Framework\Option\ArrayInterface
 {
     private $helper;
 
-    public function __construct(\Arkade\S3\Helper\S3 $helper)
+    public function __construct(\cAc\Gcs\Helper\Gcs $helper)
     {
         $this->helper = $helper;
     }

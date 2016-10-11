@@ -1,7 +1,7 @@
 <?php
-namespace Arkade\S3\Model\Cms\Wysiwyg\Images\Storage;
+namespace cAc\Gcs\Model\Cms\Wysiwyg\Images\Storage;
 
-use Arkade\S3\Helper\Data;
+use cAc\Gcs\Helper\Data;
 use Magento\Cms\Model\Wysiwyg\Images\Storage;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\MediaStorage\Helper\File\Storage\Database;
@@ -57,7 +57,7 @@ class Plugin
 
     public function afterResizeFile(Storage $subject, $result)
     {
-        if ($this->helper->checkS3Usage()) {
+        if ($this->helper->checkGCSUsage()) {
             $thumbnailRelativePath = $this->database->getMediaRelativePath($result);
             $this->database->getStorageDatabaseModel()->saveFile($thumbnailRelativePath);
         }

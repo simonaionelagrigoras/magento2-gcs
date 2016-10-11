@@ -6,7 +6,7 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="Arkade_S3::config_s3" title="Arkade S3 Section" sortOrder="1000" />
+                            <resource id="cAc_Gcs::config_gcs" title="Google Cloud Storage" sortOrder="1000" />
                         </resource>
                     </resource>
                 </resource>

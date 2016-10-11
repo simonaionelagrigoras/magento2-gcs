@@ -1,5 +1,5 @@
 <?php
-namespace Arkade\S3\Model\MediaStorage\File\Storage\Database;
+namespace cAc\Gcs\Model\MediaStorage\File\Storage\Database;
 
 class Plugin
 {
@@ -8,8 +8,8 @@ class Plugin
     private $storageModel;
 
     public function __construct(
-        \Arkade\S3\Helper\Data $helper,
-        \Arkade\S3\Model\MediaStorage\File\Storage\S3 $storageModel
+        \cAc\Gcs\Helper\Data $helper,
+        \cAc\Gcs\Model\MediaStorage\File\Storage\Gcs $storageModel
     ) {
         $this->helper = $helper;
         $this->storageModel = $storageModel;
@@ -17,7 +17,7 @@ class Plugin
 
     public function aroundGetDirectoryFiles($subject, $proceed, $directory)
     {
-        if ($this->helper->checkS3Usage()) {
+        if ($this->helper->checkGCSUsage()) {
             return $this->storageModel->getDirectoryFiles($directory);
         }
         return $proceed($directory);
