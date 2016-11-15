@@ -6,9 +6,9 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="s3ConfigListCommand" xsi:type="object">cAc\Gcs\Console\Command\ConfigListCommand</item>
-                <item name="s3ConfigSetCommand" xsi:type="object">cAc\Gcs\Console\Command\ConfigSetCommand</item>
-                <item name="s3StorageSyncCommand" xsi:type="object">cAc\Gcs\Console\Command\StorageSyncCommand</item>
+                <item name="gcsConfigListCommand" xsi:type="object">cAc\Gcs\Console\Command\ConfigListCommand</item>
+                <item name="gcsoCnfigSetCommand" xsi:type="object">cAc\Gcs\Console\Command\ConfigSetCommand</item>
+                <item name="gcsStorageSyncCommand" xsi:type="object">cAc\Gcs\Console\Command\StorageSyncCommand</item>
             </argument>
         </arguments>
     </type>

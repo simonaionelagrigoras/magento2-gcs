@@ -5,7 +5,7 @@ use cAc\Gcs\Model\MediaStorage\File\Storage;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    private $useS3 = null;
+    private $useGCS = null;
 
     /**
      * Check whether we are allowed to use S3 as our file storage backend.

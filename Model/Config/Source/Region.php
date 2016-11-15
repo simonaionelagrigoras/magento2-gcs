@@ -11,7 +11,7 @@ class Region implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
-     * Return list of available Amazon S3 regions
+     * Return list of available Google Cloud Storage regions
      *
      * @return array
      */

@@ -55,20 +55,17 @@ class Gcs extends DataObject
         $this->mediaHelper = $mediaHelper;
         $this->storageHelper = $storageHelper;
         $this->logger = $logger;
-		
+		$this->helper->getAccessKey();
+		$json_key = $this->helper->getAccessKey(),
+        $key_array = json_decode( $json_key );
+        $project = $key_array['project_id'];
 		use Google\Cloud\ServiceBuilder;
         $this->client = new StorageClient([
         $gcloud = new ServiceBuilder([
         	'config'	=> [
-        		'projectId'			=> $this->helper->getProject(),
-        		'keyFile' 			=> $this->helper->getAccessKey()
+        		'projectId'			=> $project,
+        		'keyFile' 			=> $json_key
         	]
-//             'version' => 'latest',
-//             'region' => $this->helper->getRegion(),
-//             'credentials' => [
-//                 'key' => $this->helper->getAccessKey(),
-//                 'secret' => $this->helper->getSecretKey()
-//             ]
         ]);
         
         $this->client = $gcloud->storage();
@@ -79,9 +76,10 @@ class Gcs extends DataObject
      *
      * @return $this
      */
-    public function init()
-    {
+    public function init() {
+    
         return $this;
+    
     }
 
     /**
@@ -89,68 +87,88 @@ class Gcs extends DataObject
      *
      * @return \Magento\Framework\Phrase
      */
-    public function getStorageName()
-    {
+    public function getStorageName() {
+    
         return __('Google Cloud Storage');
+    
     }
 
     /**
      * @param string $filename
      * @return $this
      */
-    public function loadByFilename($filename)
-    {
+    public function loadByFilename($filename) {
+    
+//        	Need to set a download location; file can only be downloaded, then contents, then should be unlinked.
+// 			Perhaps __DIR__ ? 
+// 			Right now, we're going to error out every time
+        //$location = ?????;
         $fail = false;
         try {
-        	$object = $this->client
+        	$object_is = object_exists( $filename );
+        	if( $object_is ) {
         	
-//             $object = $this->client->getObject([
-//                 'Bucket' => $this->getBucket(),
-//                 'Key' => $filename
-//             ]);
-// 
-//             if ($object['Body']) {
-//                 $this->setData('id', $filename);
-//                 $this->setData('filename', $filename);
-//                 $this->setData('content', (string) $object['Body']);
-//             } else {
-//                 $fail = true;
-//             }
-        } catch ($e) {
+				$object = $this->client->download( $location );
+            
+            }
+            else {
+            
+                $fail = true;
+                
+            }
+            $contents = file_get_contents( $location );
+            if ($object['Body']) {
+                $this->setData('id', $filename);
+                $this->setData('filename', $filename);
+                $this->setData('content', (string) $contents);
+                unlink( $filename );
+            } else {
+                $fail = true;
+            }
+        }
+        catch ($e) {
+        
             $fail = true;
+        
         }
 
         if ($fail) {
+        
             $this->unsetData();
-        }
+       
+       }
         return $this;
     }
 
     /**
      * @return bool
      */
-    public function hasErrors()
-    {
+    public function hasErrors() {
+    
         return !empty($this->errors);
+    
     }
 
-    public function clear()
-    {
+    public function clear() {
+    
 // 		$batch = \Aws\S3\BatchDelete::fromListObjects($this->client, [
 // 			'Bucket' => $this->getBucket()
 // 		]);
 // 		$batch->delete();
         return $this;
+    
     }
 
-    public function exportDirectories($offset = 0, $count = 100)
-    {
+    public function exportDirectories($offset = 0, $count = 100) {
+    
         return false;
+    
     }
 
-    public function importDirectories(array $dirs = [])
-    {
+    public function importDirectories(array $dirs = []) {
+    
         return $this;
+    
     }
 
     /**
@@ -158,14 +176,18 @@ class Gcs extends DataObject
      *
      * @return null
      */
-    public function getConnectionName()
-    {
+    public function getConnectionName() {
+    
         return null;
+    
     }
 
-    public function exportFiles($offset = 0, $count = 100)
-    {
+    public function exportFiles($offset = 0, $count = 100) {
+    
         $files = [];
+
+//			So, $this->client->bucket_get_objects() returns a generator, and I don't know what the Interface allows... it's in the google client (a dependency of the wrapper), so it should be able to be tracked down, but in order to rewrite the iteration below, you'll need to find how the Generator is written first.
+//			Essentially, this goes through the files in the bucket and returns them all in an array, including the contents for whatever reason.
 
 //         if (empty($this->objects)) {
 //             $this->objects = $this->client->listObjects([
@@ -202,22 +224,32 @@ class Gcs extends DataObject
         return $files;
     }
 
-    public function importFiles(array $files = [])
+    public function importFiles( array $files = [] )
     {
-//         foreach ($files as $file) {
-//             try {
-//                 $this->client->putObject([
-//                     'ACL' => 'public-read',
-//                     'Body' => $file['content'],
-//                     'Bucket' => $this->getBucket(),
-//                     'ContentType' => \GuzzleHttp\Psr7\mimetype_from_filename($file['filename']),
-//                     'Key' => $file['directory'] . '/' . $file['filename']
-//                 ]);
-//             } catch (\Exception $e) {
-//                 $this->errors[] = $e->getMessage();
-//                 $this->logger->critical($e);
-//             }
-//         }
+    
+    	$json_key = $this->helper->getAccessKey(),
+        $key_array = json_decode( $json_key );
+        $project = $key_array['project_id'];
+        foreach( $files as $file ) {
+        
+            try {
+            
+                $this->client->bucket_upload_object(
+                	realpath( $file['filename'] ),
+                	$file['filename'],
+                	false,
+                	"publicRead"
+                );
+            
+            } 
+            catch (\Exception $e) {
+            
+                $this->errors[] = $e->getMessage();
+                $this->logger->critical($e);
+            
+            }
+        
+        }
 
         return $this;
     }

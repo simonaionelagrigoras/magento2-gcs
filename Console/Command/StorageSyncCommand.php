@@ -51,24 +51,23 @@ class StorageSyncCommand extends \Symfony\Component\Console\Command\Command
             return;
         }
 
-//         try {
-//             $this->client = new \Aws\S3\S3Client([
-//                 'version' => 'latest',
-//                 'region' => $this->helper->getRegion(),
-//                 'credentials' => [
-//                     'key' => $this->helper->getAccessKey(),
-//                     'secret' => $this->helper->getSecretKey()
-//                 ]
-//             ]);
-//         } catch (\Exception $e) {
-//             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
-//             return;
-//         }
-// 
-//         if (!$this->client->doesBucketExist($this->helper->getBucket())) {
-//             $output->writeln('<error>The GCS credentials you provided did not work. Please review your details and try again. You can do so using our config script.</error>');
-//             return;
-//         }
+        try {
+        	$json_key = $this->helper->getAccessKey(),
+        	$key_array = json_decode( $json_key );
+        	$project = $key_array['project_id'];
+        	$this->client = new \cAc\GcsWrapper\GoogleCloudStorage(
+        		$json_key,
+        		$project,
+        		$this->helper->getBucket();
+        	);
+        } catch (\Exception $e) {
+            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            return;
+        }
+        if (!$this->client->bucket_exists()) {
+            $output->writeln('<error>The GCS credentials you provided did not work. Please review your details and try again. You can do so using our config script.</error>');
+            return;
+        }
 
         if ($this->coreFileStorage->getCurrentStorageCode() == \cAc\Gcs\Model\MediaStorage\File\Storage::STORAGE_MEDIA_GCS) {
             $output->writeln('<error>You are already using GCS as your media file storage backend!</error>');
@@ -77,32 +76,45 @@ class StorageSyncCommand extends \Symfony\Component\Console\Command\Command
 
         $output->writeln(sprintf('Uploading files to use GCS.'));
         if ($this->coreFileStorage->getCurrentStorageCode() == \cAc\Gcs\Model\MediaStorage\File\Storage::STORAGE_MEDIA_FILE_SYSTEM) {
+        
             try {
-//                 $this->client->uploadDirectory(
-//                     $this->storageHelper->getMediaBaseDir(),
-//                     $this->helper->getBucket()
-//                 );
-            } catch (\Exception $e) {
+            
+                $this->client->bucket_upload_directory(
+                    $this->storageHelper->getMediaBaseDir(),
+                    false,
+                    "publicRead"
+                );
+           
+            } 
+            catch (\Exception $e) {
+            
                 $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            
             }
-        } else {
+        
+        } 
+        else {
+        
             $sourceModel = $this->coreFileStorage->getStorageModel();
             $destinationModel = $this->coreFileStorage->getStorageModel(\cAc\Gcs\Model\MediaStorage\File\Storage::STORAGE_MEDIA_GCS);
-
             $offset = 0;
             while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
+            
                 foreach ($files as $file) {
+                
                     $output->writeln(sprintf('Uploading %s to use GCS.', $file['directory'] . '/' . $file['filename']));
+               
                 }
                 $destinationModel->importFiles($files);
                 $offset += count($files);
+            
             }
+        
         }
         $output->writeln(sprintf('Finished uploading files to use GCS.'));
 
         if ($input->getOption('enable')) {
             $output->writeln('Updating configuration to use GCS.');
-
             $this->state->setAreaCode('adminhtml');
             $config = $this->configFactory->create();
             $config->setDataByPath('system/media_storage_configuration/media_storage', \cAc\Gcs\Model\MediaStorage\File\Storage::STORAGE_MEDIA_GCS);
@@ -125,9 +137,9 @@ class StorageSyncCommand extends \Symfony\Component\Console\Command\Command
         if (is_null($this->helper->getAccessKey())) {
             $errors[] = 'You have not provided an GCS access key ID. You can do so using our config script.';
         }
-        if (is_null($this->helper->getSecretKey())) {
-            $errors[] = 'You have not provided an GCS secret access key. You can do so using our config script.';
-        }
+//         if (is_null($this->helper->getSecretKey())) {
+//             $errors[] = 'You have not provided an GCS secret access key. You can do so using our config script.';
+//         }
         if (is_null($this->helper->getBucket())) {
             $errors[] = 'You have not provided an GCS bucket. You can do so using our config script.';
         }
