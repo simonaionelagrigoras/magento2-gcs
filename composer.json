@@ -1,5 +1,5 @@
 {
-  "name": "cAc/magento2-gcs",
+  "name": "bangerkuwranger/magento2-gcs",
   "description": "Use Google Cloud Storage as the file storage backend for your store.",
   "type": "magento2-module",
   "license": "MIT",
@@ -22,8 +22,6 @@
     }
   },
   "require": {
-	"google/gax": "^0.2.0",
-	"google/proto-client-php": "^0.4.0",
-    "google/cloud": "v0.10.1"
+	"bangerkuwranger/google-cloud-storage-php-wrapper": "dev-master",
   }
 }
