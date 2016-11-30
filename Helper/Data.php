@@ -1,7 +1,7 @@
 <?php
-namespace cAc\Gcs\Helper;
+namespace Google\Cloud\Helper;
 
-use cAc\Gcs\Model\MediaStorage\File\Storage;
+use Google\Cloud\Model\MediaStorage\File\Storage;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -23,21 +23,21 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function getAccessKey()
     {
-        return $this->scopeConfig->getValue('cac_gcs/general/access_key');
+        return $this->scopeConfig->getValue('google_cloud/general/access_key');
     }
 
     public function getProject()
     {
-        return $this->scopeConfig->getValue('cac_gcs/general/project');
+        return $this->scopeConfig->getValue('google_cloud/general/project');
     }
 
     public function getRegion()
     {
-        return $this->scopeConfig->getValue('cac_gcs/general/region');
+        return $this->scopeConfig->getValue('google_cloud/general/region');
     }
 
     public function getBucket()
     {
-        return $this->scopeConfig->getValue('cac_gcs/general/bucket');
+        return $this->scopeConfig->getValue('google_cloud/general/bucket');
     }
 }

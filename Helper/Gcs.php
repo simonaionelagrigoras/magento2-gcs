@@ -1,5 +1,5 @@
 <?php
-namespace cAc\Gcs\Helper;
+namespace Google\Cloud\Helper;
 
 class Gcs
 {

@@ -1,5 +1,5 @@
 <?php
-namespace cAc\Gcs\Helper\MediaStorage\File\Storage\Database;
+namespace Google\Cloud\Helper\MediaStorage\File\Storage\Database;
 
 use Magento\MediaStorage\Helper\File\Storage\Database;
 
@@ -14,8 +14,8 @@ class Plugin
     private $storageModel = null;
 
     public function __construct(
-        \cAc\Gcs\Helper\Data $helper,
-        \cAc\Gcs\Model\MediaStorage\File\Storage\GcsFactory $gcsStorageFactory,
+        \Google\Cloud\Helper\Data $helper,
+        \Google\Cloud\Model\MediaStorage\File\Storage\GcsFactory $gcsStorageFactory,
         \Magento\MediaStorage\Model\File\Storage\DatabaseFactory $dbStorageFactory
     ) {
         $this->helper = $helper;
@@ -90,7 +90,7 @@ class Plugin
     public function aroundDeleteFolder(Database $subject, $proceed, $folderName)
     {
         if ($this->helper->checkGCSUsage()) {
-            /** @var \cAc\Gcs\Model\MediaStorage\File\Storage\Gcs $storageModel */
+            /** @var \Cac\Gcs\Model\MediaStorage\File\Storage\Gcs $storageModel */
             $storageModel = $subject->getStorageDatabaseModel();
             $storageModel->deleteDirectory($folderName);
         } else {

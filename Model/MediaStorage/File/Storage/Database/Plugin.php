@@ -1,5 +1,5 @@
 <?php
-namespace cAc\Gcs\Model\MediaStorage\File\Storage\Database;
+namespace Google\Cloud\Model\MediaStorage\File\Storage\Database;
 
 class Plugin
 {
@@ -8,8 +8,8 @@ class Plugin
     private $storageModel;
 
     public function __construct(
-        \cAc\Gcs\Helper\Data $helper,
-        \cAc\Gcs\Model\MediaStorage\File\Storage\Gcs $storageModel
+        \Google\Cloud\Helper\Data $helper,
+        \Google\Cloud\Model\MediaStorage\File\Storage\Gcs $storageModel
     ) {
         $this->helper = $helper;
         $this->storageModel = $storageModel;

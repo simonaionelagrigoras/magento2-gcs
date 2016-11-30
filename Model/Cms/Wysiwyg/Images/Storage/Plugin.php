@@ -1,7 +1,7 @@
 <?php
-namespace cAc\Gcs\Model\Cms\Wysiwyg\Images\Storage;
+namespace Google\Cloud\Model\Cms\Wysiwyg\Images\Storage;
 
-use cAc\Gcs\Helper\Data;
+use Google\Cloud\Helper\Data;
 use Magento\Cms\Model\Wysiwyg\Images\Storage;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\MediaStorage\Helper\File\Storage\Database;

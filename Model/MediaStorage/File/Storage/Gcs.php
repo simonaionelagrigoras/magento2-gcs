@@ -1,9 +1,9 @@
 <?php
-namespace cAc\Gcs\Model\MediaStorage\File\Storage;
+namespace Google\Cloud\Model\MediaStorage\File\Storage;
 
 // use Aws\S3\Exception\S3Exception;
 use Magento\Framework\DataObject;
-
+use Google\Cloud\ServiceBuilder;
 class Gcs extends DataObject
 {
     /**
@@ -41,34 +41,37 @@ class Gcs extends DataObject
      */
     private $logger;
 
+	private $storageFile;
+	
+	
     private $objects = [];
 
     public function __construct(
-        \cAc\Gcs\Helper\Data $helper,
+        \Google\Cloud\Helper\Data $helper,
         \Magento\MediaStorage\Helper\File\Media $mediaHelper,
         \Magento\MediaStorage\Helper\File\Storage\Database $storageHelper,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+		\Magento\MediaStorage\Model\File\Storage\File $storageFile
     ) {
         parent::__construct();
 
         $this->helper = $helper;
         $this->mediaHelper = $mediaHelper;
         $this->storageHelper = $storageHelper;
+		$this->storageFile = $storageFile;
         $this->logger = $logger;
 		$this->helper->getAccessKey();
-		$json_key = $this->helper->getAccessKey(),
-        $key_array = json_decode( $json_key );
+		$json_key = $this->helper->getAccessKey();
+        $key_array = json_decode( $json_key,true );
         $project = $key_array['project_id'];
-		use Google\Cloud\ServiceBuilder;
-        $this->client = new StorageClient([
-        $gcloud = new ServiceBuilder([
-        	'config'	=> [
-        		'projectId'			=> $project,
-        		'keyFile' 			=> $json_key
-        	]
-        ]);
+        //$this->client = new StorageClient([
+        //$gcloud = new \Google\Cloud\ServiceBuilder(array('projectId'=> $project,'keyFile'=> $json_key));
         
-        $this->client = $gcloud->storage();
+        $this->client = new \cAc\GcsWrapper\GoogleCloudStorage(
+				$project,
+        		$json_key,
+        		$this->helper->getBucket()
+        	);
     }
 
     /**
@@ -126,7 +129,7 @@ class Gcs extends DataObject
                 $fail = true;
             }
         }
-        catch ($e) {
+        catch (\Exception $e) {
         
             $fail = true;
         
@@ -183,9 +186,9 @@ class Gcs extends DataObject
     }
 
     public function exportFiles($offset = 0, $count = 100) {
-    
-        $files = [];
-
+		
+        $files = $this->storageFile->exportFiles($offset,$count);
+		
 //			So, $this->client->bucket_get_objects() returns a generator, and I don't know what the Interface allows... it's in the google client (a dependency of the wrapper), so it should be able to be tracked down, but in order to rewrite the iteration below, you'll need to find how the Generator is written first.
 //			Essentially, this goes through the files in the bucket and returns them all in an array, including the contents for whatever reason.
 
@@ -226,21 +229,20 @@ class Gcs extends DataObject
 
     public function importFiles( array $files = [] )
     {
-    
-    	$json_key = $this->helper->getAccessKey(),
-        $key_array = json_decode( $json_key );
+		
+    	$json_key = $this->helper->getAccessKey();
+        $key_array = json_decode( $json_key,true );
         $project = $key_array['project_id'];
-        foreach( $files as $file ) {
-        
+        foreach( $files as $file ) {        
             try {
-            
+				$mediaPath = $file['directory'].'/'.$file['filename'];
                 $this->client->bucket_upload_object(
-                	realpath( $file['filename'] ),
+                	$mediaPath,
+					$this->storageHelper->getMediaBaseDir(),
                 	$file['filename'],
                 	false,
                 	"publicRead"
                 );
-            
             } 
             catch (\Exception $e) {
             

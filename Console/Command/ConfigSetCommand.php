@@ -1,5 +1,5 @@
 <?php
-namespace cAc\Gcs\Console\Command;
+namespace Google\Cloud\Console\Command;
 
 use Magento\Config\Model\Config\Factory;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +17,7 @@ class ConfigSetCommand extends \Symfony\Component\Console\Command\Command
     public function __construct(
         \Magento\Framework\App\State $state,
         Factory $configFactory,
-        \cAc\Gcs\Helper\Gcs $helper
+        \Google\Cloud\Helper\Gcs $helper
     ) {
         $this->state = $state;
         $this->helper = $helper;
@@ -35,7 +35,7 @@ class ConfigSetCommand extends \Symfony\Component\Console\Command\Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$input->getOption('region') && !$input->getOption('bucket') && !$input->getOption('project') && !$input->getOption('access-key')) {
+        if (!$input->getOption('region') && !$input->getOption('bucket') && !$input->getOption('project') && !$input->getOption('access_key')) {
             $output->writeln($this->getSynopsis());
             return;
         }
@@ -49,23 +49,23 @@ class ConfigSetCommand extends \Symfony\Component\Console\Command\Command
         $this->state->setAreaCode('adminhtml');
         $config = $this->configFactory->create();
 
-        if (!empty($input->getOption('access-key'))) {
-            $config->setDataByPath('cac_gcs/general/access_key', $input->getOption('access-key'));
+        if (!empty($input->getOption('access_key'))) {
+            $config->setDataByPath('google_cloud/general/access_key', $input->getOption('access_key'));
             $config->save();
         }
 
         if (!empty($input->getOption('project'))) {
-            $config->setDataByPath('cac_gcs/general/project', $input->getOption('project'));
+            $config->setDataByPath('google_cloud/general/project', $input->getOption('project'));
             $config->save();
         }
 
         if (!empty($input->getOption('bucket'))) {
-            $config->setDataByPath('cac_gcs/general/bucket', $input->getOption('bucket'));
+            $config->setDataByPath('google_cloud/general/bucket', $input->getOption('bucket'));
             $config->save();
         }
 
         if (!empty($input->getOption('region'))) {
-            $config->setDataByPath('cac_gcs/general/region', $input->getOption('region'));
+            $config->setDataByPath('google_cloud/general/region', $input->getOption('region'));
             $config->save();
         }
 
@@ -75,7 +75,7 @@ class ConfigSetCommand extends \Symfony\Component\Console\Command\Command
     public function getOptionsList()
     {
         return [
-            new InputOption('access-key', null, InputOption::VALUE_OPTIONAL, 'a valid GCS access JSON object'),
+            new InputOption('access_key', null, InputOption::VALUE_OPTIONAL, 'a valid GCS access JSON object'),
             new InputOption('project', null, InputOption::VALUE_OPTIONAL, 'a valid GCS project ID'),
             new InputOption('bucket', null, InputOption::VALUE_OPTIONAL, 'an GCS bucket name'),
             new InputOption('region', null, InputOption::VALUE_OPTIONAL, 'an GCD region, e.g. us-east-b')

@@ -1,5 +1,5 @@
 <?php
-namespace Arkade\S3\Model\ResourceModel\MediaStorage\File\Storage;
+namespace Google\Cloud\Model\ResourceModel\MediaStorage\File\Storage;
 
 class File extends \Magento\MediaStorage\Model\ResourceModel\File\Storage\File
 {
@@ -16,7 +16,7 @@ class File extends \Magento\MediaStorage\Model\ResourceModel\File\Storage\File
 
     /**
      * Extend the original functionality of this method by also uploading the
-     * requested file to S3.
+     * requested file to GCS.
      *
      * @param string $filePath
      * @param string $content

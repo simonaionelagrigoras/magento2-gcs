@@ -1,5 +1,5 @@
 <?php
-namespace Arkade\S3\Model\Store\Store;
+namespace Google\Cloud\Model\Store\Store;
 
 class Plugin
 {

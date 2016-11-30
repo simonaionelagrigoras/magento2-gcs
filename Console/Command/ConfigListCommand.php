@@ -1,5 +1,5 @@
 <?php
-namespace cAc\Gcs\Console\Command;
+namespace Google\Cloud\Console\Command;
 
 use Magento\Config\Model\Config\Factory;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,9 +33,9 @@ class ConfigListCommand extends \Symfony\Component\Console\Command\Command
         $config = $this->configFactory->create();
         $output->writeln('Here are your Google Cloud credentials:');
         $output->writeln('');
-        $output->writeln(sprintf('JSON Key:     %s', $config->getConfigDataValue('cac_gcs/general/access_key')));
-//         $output->writeln(sprintf('Secret Access Key: %s', $config->getConfigDataValue('cac_gcs/general/secret_key')));
-        $output->writeln(sprintf('Bucket:            %s', $config->getConfigDataValue('cac_gcs/general/bucket')));
-        $output->writeln(sprintf('Region:            %s', $config->getConfigDataValue('cac_gcs/general/region')));
+        $output->writeln(sprintf('JSON Key:     %s', $config->getConfigDataValue('google_cloud/general/access_key')));
+         $output->writeln(sprintf('Project Id: %s', $config->getConfigDataValue('google_cloud/general/project')));
+        $output->writeln(sprintf('Bucket:            %s', $config->getConfigDataValue('google_cloud/general/bucket')));
+        $output->writeln(sprintf('Region:            %s', $config->getConfigDataValue('google_cloud/general/region')));
     }
 }

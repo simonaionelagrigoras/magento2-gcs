@@ -1,5 +1,5 @@
 <?php
-namespace cAc\Gcs\Model\MediaStorage\File\Storage;
+namespace Google\Cloud\Model\MediaStorage\File\Storage;
 
 class Plugin
 {
@@ -22,7 +22,7 @@ class Plugin
                 $storage = $this->coreFileStorage->getCurrentStorageCode();
             }
             switch ($storage) {
-                case \cAc\Gcs\Model\MediaStorage\File\Storage::STORAGE_MEDIA_GCS:
+                case \Google\Cloud\Model\MediaStorage\File\Storage::STORAGE_MEDIA_GCS:
                     $storageModel = $this->gcsFactory->create();
                     break;
                 default:
