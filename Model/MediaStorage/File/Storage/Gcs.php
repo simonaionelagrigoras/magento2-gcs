@@ -108,10 +108,10 @@ class Gcs extends DataObject
         //$location = ?????;
         $fail = false;
         try {
-        	$object_is = object_exists( $filename );
+        	$object_is = $this->client->object_exists( $filename );
         	if( $object_is ) {
         	
-				$object = $this->client->download( $location );
+				$object = $this->client->object_download( $location );
             
             }
             else {
