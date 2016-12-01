@@ -124,7 +124,7 @@ class Gcs extends DataObject
                 $this->setData('id', $filename);
                 $this->setData('filename', $filename);
                 $this->setData('content', (string) $contents);
-                unlink( $filename );
+                //unlink( $filename );
             } else {
                 $fail = true;
             }
